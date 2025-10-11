@@ -1,0 +1,21 @@
+
+{
+  "name": "vitalapp",
+  "version": "1.0.0",
+  "description": "VitalApp DevOps MVP (Express + Jest + Docker + CI/CD)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest --coverage --ci"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "nodemon": "^3.1.0"
+  }
+}

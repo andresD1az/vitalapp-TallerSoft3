@@ -1,0 +1,13 @@
+services:
+  web:
+    image: ${IMAGE:-ghcr.io/TU_ORG/vitalapp}:${TAG:-latest}
+    ports:
+      - "80:3000"
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
