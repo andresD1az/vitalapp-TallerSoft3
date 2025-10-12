@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: andresd1az/vitalapp-tallersoft3
 
 jobs:
   ci:
@@ -94,7 +94,7 @@ jobs:
           script: |
             set -e
             cd /opt/vitalapp
-            export IMAGE="ghcr.io/${{ github.repository }}"
+            export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
             chmod +x deploy.sh || true
             ./deploy.sh
