@@ -93,7 +93,8 @@ jobs:
           key: ${{ env.STAGING_SSH_KEY }}
           script: |
             set -e
-            mkdir -p /opt/vitalapp
+            sudo mkdir -p /opt/vitalapp
+            sudo chown -R $USER:$USER /opt/vitalapp
             cd /opt/vitalapp
             export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
@@ -121,9 +122,11 @@ jobs:
           key: ${{ env.PROD_SSH_KEY }}
           script: |
             set -e
-            mkdir -p /opt/vitalapp
+            sudo mkdir -p /opt/vitalapp
+            sudo chown -R $USER:$USER /opt/vitalapp
             cd /opt/vitalapp
             export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
             chmod +x deploy.sh || true
             ./deploy.sh
+
