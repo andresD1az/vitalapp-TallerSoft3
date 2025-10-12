@@ -71,9 +71,11 @@ jobs:
   deploy-staging:
     needs: build-and-push
     runs-on: ubuntu-latest
+    env:
+      STAGING_HOST: ${{ secrets.STAGING_HOST }}
     environment:
       name: staging
-      url: http://${{ secrets.STAGING_HOST }}
+      url: http://${{ env.STAGING_HOST }}
     steps:
       - name: SSH deploy (docker compose pull/up)
         uses: appleboy/ssh-action@v1.2.0
