@@ -14,6 +14,9 @@ env:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,10 +34,10 @@ jobs:
 
       - name: Sonar Scan
         uses: SonarSource/sonarqube-scan-action@v2
-        if: ${{ secrets.SONAR_TOKEN != '' }}
+        if: ${{ env.SONAR_TOKEN != '' }}
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
 
   build-and-push:
     needs: ci
@@ -72,19 +75,22 @@ jobs:
   deploy-staging:
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && secrets.STAGING_HOST != '' && secrets.STAGING_USER != '' && secrets.STAGING_SSH_KEY != '' }}
-    env:
-      STAGING_HOST: ${{ secrets.STAGING_HOST }}
+    if: github.ref == 'refs/heads/main'
     environment:
       name: staging
-      url: http://${{ env.STAGING_HOST }}
+      # url omitted to avoid referencing secrets in workflow parse
     steps:
       - name: SSH deploy (docker compose pull/up)
         uses: appleboy/ssh-action@v1.2.0
+        if: ${{ env.STAGING_HOST != '' && env.STAGING_USER != '' && env.STAGING_SSH_KEY != '' }}
+        env:
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
         with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
+          host: ${{ env.STAGING_HOST }}
+          username: ${{ env.STAGING_USER }}
+          key: ${{ env.STAGING_SSH_KEY }}
           script: |
             set -e
             cd /opt/vitalapp
@@ -96,17 +102,22 @@ jobs:
   deploy-prod:
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && secrets.PROD_HOST != '' && secrets.PROD_USER != '' && secrets.PROD_SSH_KEY != '' }}
+    if: github.ref == 'refs/heads/main'
     environment:
       name: production
       url: https://vitalapp.saludvital.com
     steps:
       - name: SSH deploy prod
         uses: appleboy/ssh-action@v1.2.0
+        if: ${{ env.PROD_HOST != '' && env.PROD_USER != '' && env.PROD_SSH_KEY != '' }}
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
         with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
+          host: ${{ env.PROD_HOST }}
+          username: ${{ env.PROD_USER }}
+          key: ${{ env.PROD_SSH_KEY }}
           script: |
             set -e
             cd /opt/vitalapp
