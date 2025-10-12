@@ -93,6 +93,7 @@ jobs:
           key: ${{ env.STAGING_SSH_KEY }}
           script: |
             set -e
+            mkdir -p /opt/vitalapp
             cd /opt/vitalapp
             export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
@@ -120,8 +121,9 @@ jobs:
           key: ${{ env.PROD_SSH_KEY }}
           script: |
             set -e
+            mkdir -p /opt/vitalapp
             cd /opt/vitalapp
-            export IMAGE="ghcr.io/${{ github.repository }}"
+            export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
             chmod +x deploy.sh || true
             ./deploy.sh
