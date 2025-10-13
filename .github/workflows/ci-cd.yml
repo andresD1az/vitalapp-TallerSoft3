@@ -63,6 +63,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -87,6 +91,8 @@ jobs:
           STAGING_HOST: ${{ secrets.STAGING_HOST }}
           STAGING_USER: ${{ secrets.STAGING_USER }}
           STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
         with:
           host: ${{ env.STAGING_HOST }}
           username: ${{ env.STAGING_USER }}
@@ -96,6 +102,10 @@ jobs:
             sudo mkdir -p /opt/vitalapp
             sudo chown -R $USER:$USER /opt/vitalapp
             cd /opt/vitalapp
+            if [ -n "${GHCR_USER}" ] && [ -n "${GHCR_PAT}" ]; then
+              echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin || true
+            fi
+            docker info | sed -n '1,25p' || true
             export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
             chmod +x deploy.sh || true
@@ -116,6 +126,8 @@ jobs:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_USER: ${{ secrets.PROD_USER }}
           PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
         with:
           host: ${{ env.PROD_HOST }}
           username: ${{ env.PROD_USER }}
@@ -125,6 +137,10 @@ jobs:
             sudo mkdir -p /opt/vitalapp
             sudo chown -R $USER:$USER /opt/vitalapp
             cd /opt/vitalapp
+            if [ -n "${GHCR_USER}" ] && [ -n "${GHCR_PAT}" ]; then
+              echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin || true
+            fi
+            docker info | sed -n '1,25p' || true
             export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             export TAG=latest
             chmod +x deploy.sh || true
