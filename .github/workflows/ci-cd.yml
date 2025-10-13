@@ -93,8 +93,9 @@ jobs:
           STAGING_HOST: ${{ secrets.STAGING_HOST }}
           STAGING_USER: ${{ secrets.STAGING_USER }}
           STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
-          GHCR_USER: ${{ secrets.GHCR_USER }}
-          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+          # prefer environment-specific GHCR creds if present; fallback to repo-level
+          GHCR_USER: ${{ secrets.STAGING_GHCR_USER || secrets.GHCR_USER }}
+          GHCR_PAT: ${{ secrets.STAGING_GHCR_TOKEN || secrets.GHCR_PAT }}
         with:
           host: ${{ env.STAGING_HOST }}
           username: ${{ env.STAGING_USER }}
@@ -128,8 +129,8 @@ jobs:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_USER: ${{ secrets.PROD_USER }}
           PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
-          GHCR_USER: ${{ secrets.GHCR_USER }}
-          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+          GHCR_USER: ${{ secrets.PROD_GHCR_USER || secrets.GHCR_USER }}
+          GHCR_PAT: ${{ secrets.PROD_GHCR_TOKEN || secrets.GHCR_PAT }}
         with:
           host: ${{ env.PROD_HOST }}
           username: ${{ env.PROD_USER }}
