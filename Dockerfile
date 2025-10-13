@@ -2,8 +2,15 @@
 # ---- Build base (instala deps) ----
 FROM node:20-alpine AS base
 WORKDIR /app
+# cache-bust ARG to avoid stale package.json cache
+ARG BUILD_ID
 COPY package*.json ./
-RUN npm ci --omit=dev || npm install --omit=dev
+# sanitize any leftover overrides/cross-spawn and install
+RUN npm pkg delete overrides || true \
+ && npm pkg delete dependencies.cross-spawn || true \
+ && echo "--- package.json after sanitize ---" \
+ && cat package.json \
+ && (npm ci --omit=dev || npm install --omit=dev)
 COPY . .
 
 # ---- Runtime ----

@@ -99,6 +99,8 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+            BUILD_ID=${{ github.run_id }}
           tags: |
             ${{ steps.meta.outputs.tags }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
