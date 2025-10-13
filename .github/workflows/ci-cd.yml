@@ -36,8 +36,8 @@ jobs:
         env:
           CI: true
 
-      - name: Lint (if config present)
-        if: ${{ hashFiles('**/.eslintrc*') != '' }}
+      - name: Lint (if modern config present)
+        if: ${{ hashFiles('eslint.config.*') != '' }}
         run: npx eslint .
 
       - name: Sonar Scan
