@@ -30,8 +30,17 @@ jobs:
       - name: Show workspace
         run: ls -la
 
+      - name: Show package.json
+        run: cat package.json
+
+      - name: Sanitize overrides (CI safety)
+        run: |
+          npm pkg delete overrides || true
+          npm pkg delete dependencies.cross-spawn || true
+          echo "Sanitized package.json (overrides and cross-spawn direct dep removed if present)"
+
       - name: Install deps
-        run: npm ci || npm install --no-audit --no-fund
+        run: npm install --no-audit --no-fund
 
       - name: Run tests with coverage
         run: |
