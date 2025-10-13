@@ -11,8 +11,7 @@
     "test": "jest --coverage --ci"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "cross-spawn": "^7.0.5"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -21,5 +20,6 @@
   },
   "overrides": {
     "cross-spawn": "7.0.5"
+
   }
 }
