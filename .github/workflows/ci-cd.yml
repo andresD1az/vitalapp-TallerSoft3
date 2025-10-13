@@ -100,6 +100,7 @@ jobs:
           host: ${{ env.STAGING_HOST }}
           username: ${{ env.STAGING_USER }}
           key: ${{ env.STAGING_SSH_KEY }}
+          envs: GHCR_USER,GHCR_PAT
           script: |
             set -e
             sudo mkdir -p /opt/vitalapp
@@ -135,6 +136,7 @@ jobs:
           host: ${{ env.PROD_HOST }}
           username: ${{ env.PROD_USER }}
           key: ${{ env.PROD_SSH_KEY }}
+          envs: GHCR_USER,GHCR_PAT
           script: |
             set -e
             sudo mkdir -p /opt/vitalapp
