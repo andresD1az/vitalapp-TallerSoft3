@@ -27,13 +27,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Show workspace
+        run: ls -la
+
       - name: Install deps
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install --no-audit --no-fund
-          fi
+        run: npm ci || npm install --no-audit --no-fund
 
       - name: Run tests with coverage
         run: |
