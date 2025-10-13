@@ -7,6 +7,9 @@ ARG BUILD_ID
 COPY package*.json ./
 # install deps (honor overrides in package.json)
 RUN cat package.json && (npm ci --omit=dev || npm install --omit=dev)
+# diagnostics: verify cross-spawn version inside image build
+RUN npm ls cross-spawn || true
+RUN node -e "console.log('cross-spawn version in image:', require('cross-spawn/package.json').version)"
 COPY . .
 # remove devDependencies from package.json for production footprint
 RUN node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));if(p.devDependencies){delete p.devDependencies;}fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n')"
