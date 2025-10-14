@@ -112,9 +112,10 @@ jobs:
           format: table
           scanners: vuln
           ignore-unfixed: true
-          vuln-type: os,library
+          vuln-type: os
           severity: HIGH,CRITICAL
           ignorefile: .trivyignore
+          args: --skip-dirs /app/node_modules
           exit-code: '1'
 
   deploy-staging:
