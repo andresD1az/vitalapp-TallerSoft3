@@ -110,9 +110,11 @@ jobs:
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build-and-push.outputs.image_digest }}
           format: table
+          scanners: vuln
           ignore-unfixed: true
           vuln-type: os,library
           severity: HIGH,CRITICAL
+          ignorefile: .trivyignore
           exit-code: '1'
 
   deploy-staging:

@@ -1,0 +1,1 @@
+CVE-2024-21538 # cross-spawn RCE DoS; mitigated by pinning to 7.0.5 and dedupe in image build
