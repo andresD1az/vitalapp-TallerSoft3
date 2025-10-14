@@ -6,7 +6,10 @@ WORKDIR /app
 ARG BUILD_ID
 COPY package*.json ./
 # install deps (honor overrides in package.json)
-RUN cat package.json && (npm ci --omit=dev || npm install --omit=dev)
+RUN cat package.json && (npm ci --omit=dev || npm install --omit=dev) \
+ && npm install cross-spawn@7.0.5 --save-exact --omit=dev \
+ && npm dedupe \
+ && npm prune --omit=dev
 # diagnostics: verify cross-spawn version inside image build (non-fatal)
 RUN npm ls cross-spawn || true
 RUN node -e "try{console.log('cross-spawn version in image:', require('cross-spawn/package.json').version)}catch(e){console.log('cross-spawn not present in prod deps')}"
